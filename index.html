@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Fractions & Decimals - رياضيات الصف السابع | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان تفاعلي عن الكسور والأعداد العشرية - رياضيات الصف السابع">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+body.en-mode { font-family: 'Inter', sans-serif; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch { position: fixed; top: 16px; left: 16px; z-index: 100; background: white; padding: 6px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px; border: 2px solid #d97706; }
+[dir="ltr"] .lang-switch { left: auto; right: 16px; }
+.lang-btn { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s; border: none; font-size: 0.875rem; background: transparent; color: #6b7280; }
+.lang-btn.active { background: #d97706; color: white; box-shadow: 0 2px 6px rgba(217,119,6,0.4); }
+.shuffle-badge { display: inline-block; background: linear-gradient(135deg, #d97706, #b45309); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; }
+.math-display { display: inline-block; direction: ltr; font-family: 'Amiri', serif; font-size: 1.2em; padding: 2px 8px; background: #fef3c7; border-radius: 6px; margin: 2px; color: #92400e; font-weight: 600; }
+.save-indicator { position: fixed; bottom: 20px; left: 20px; z-index: 200; background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.save-indicator.show { opacity: 1; }
+.formula-box { background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px; margin: 10px 0; font-family: 'Amiri', serif; direction: ltr; text-align: center; }
+.svg-graph { display: block; margin: 12px auto; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px; }
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 8px; }
+.module-1 { background: #fef3c7; color: #92400e; }
+.module-2 { background: #dbeafe; color: #1e40af; }
+.module-3 { background: #fce7f3; color: #9f1239; }
+.module-4 { background: #ecfdf5; color: #065f46; }
+.answer-input { width: 100%; padding: 8px 12px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 1rem; font-family: 'Amiri', serif; direction: ltr; text-align: center; background: white; transition: border-color 0.3s; }
+.answer-input:focus { outline: none; border-color: #d97706; box-shadow: 0 0 0 3px rgba(217,119,6,0.1); }
+.answer-input.correct-input { border-color: #16a34a; background: #dcfce7; }
+.answer-input.incorrect-input { border-color: #dc2626; background: #fee2e2; }
+.check-btn { background: linear-gradient(135deg, #d97706, #b45309); color: white; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; border: none; }
+.check-btn:hover { background: linear-gradient(135deg, #b45309, #92400e); transform: scale(1.05); }
+.show-answer-btn { background: #6b7280; color: white; padding: 6px 16px; border-radius: 8px; font-size: 0.875rem; cursor: pointer; border: none; margin-top: 8px; }
+.show-answer-btn:hover { background: #4b5563; }
+.solution-box { background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 12px; margin-top: 10px; display: none; }
+.solution-box.show { display: block; }
+</style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
+</div>
+
+<div id="saveIndicator" class="save-indicator">💾 <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-lg inline-block border-2 border-amber-100">
+<span class="text-gray-600 ml-2">⏰ الوقت المتبقي:</span>
+<span id="timer" class="text-2xl font-bold text-amber-700 font-mono">60:00</span>
+<span class="shuffle-badge">📊 Fractions & Decimals - 25 سؤال</span>
+</div>
+</div>
+
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="checkAllAnswers()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2 rounded-xl font-medium transition shadow">✅ تحقق من جميع الإجابات</button>
+<button onclick="showAllSolutions()" class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2 rounded-xl font-medium transition shadow">📖 إظهار جميع الحلول</button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow">🖨️ طباعة</button>
+<button onclick="clearAllAnswers()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow">🗑️ مسح جميع الإجابات</button>
+</div>
+
+<header class="max-w-5xl mx-auto bg-white p-8 rounded-3xl shadow-2xl mb-8 border-4 border-amber-500">
+<div class="text-center">
+<div class="inline-block bg-amber-700 text-white px-6 py-2 rounded-full text-sm font-bold mb-4">GRADE 7 MATHEMATICS - FRACTIONS & DECIMALS</div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">📊 الكسور والأعداد العشرية</h1>
+<h2 class="text-xl text-amber-700 font-semibold mb-2">رياضيات الصف السابع العام</h2>
+<p class="text-gray-600 mb-4">Converting Fractions to Decimals & Vice Versa</p>
+<p class="text-sm text-green-600 font-semibold">💾 يتم حفظ تقدمك تلقائياً - 25 سؤالاً (اختياري + كتابي)</p>
+</div>
+<div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span>📅 التاريخ: <input type="text" id="examDate" class="border-b-2 border-amber-300 bg-transparent w-32 text-center"></span>
+<span>😊 الاسم: <input type="text" id="studentName" class="border-b-2 border-amber-300 bg-transparent w-40 text-center" placeholder="اكتب اسمك"></span>
+<span>🏫 الشعبة: <input type="text" id="studentClass" class="border-b-2 border-amber-300 bg-transparent w-32 text-center" placeholder="الشعبة"></span>
+<span>⏰ المدة: 60 دقيقة</span>
+<span>📊 المجموع: 100 درجة</span>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-lg border-2 border-amber-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-amber-800 text-center">📐 القواعد الأساسية</h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box"><strong>Fraction → Decimal</strong><br>Divide numerator ÷ denominator</div>
+<div class="formula-box"><strong>Decimal → Fraction</strong><br>Write over 10, 100, 1000... then simplify</div>
+<div class="formula-box"><strong>Mixed Number</strong><br>Whole + Fraction</div>
+</div>
+</div>
+
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
+
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-amber-700 to-orange-600 hover:from-amber-800 hover:to-orange-700 text-white text-lg px-12 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105">🎯 صحح الامتحان!</button>
+</div>
+
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-3xl shadow-2xl border-4 border-amber-500 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">🏆 نتيجتك يا بطل! 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-amber-50 p-4 rounded-xl text-center"><p>😊 الاسم</p><p id="res-name" class="font-bold text-xl text-amber-700">-</p></div>
+<div class="bg-orange-50 p-4 rounded-xl text-center"><p>📅 التاريخ</p><p id="res-date" class="font-bold text-xl text-orange-700">-</p></div>
+<div class="bg-amber-50 p-4 rounded-xl text-center"><p>🌟 المجموع</p><p id="res-total" class="font-bold text-3xl text-amber-700">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-amber-700 mt-2">0%</p>
+<p class="text-sm text-gray-500">نسبة النجاح</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800">📊 أدائك في كل قسم:</h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition">📧 أرسل النتيجة للمعلم</button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+</div>
+
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© Fractions & Decimals - Grade 7 | Mr. Mohammed Hesham 📊
+</footer>
+
+<script>
+const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
+const SERVICE_ID = "service_w15m64i";
+const TEMPLATE_ID = "template_5b0u2tq";
+const TARGET_EMAIL = "mohammedhesham872@gmail.com";
+emailjs.init(PUBLIC_KEY);
+
+const STORAGE_KEY = 'grade7_fractions_decimals_exam_v1';
+const TOTAL_TIME = 3600;
+const TOTAL_QUESTIONS = 25;
+const TOTAL_SECTIONS = 4;
+
+let currentLang = 'ar';
+let timeRemaining = TOTAL_TIME;
+let timerInterval;
+let saveIndicatorTimeout = null;
+
+// ==================== SVG DIAGRAMS ====================
+const svgGraphs = {
+    fraction_to_decimal: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">📊 تحويل الكسر إلى عدد عشري</text>
+        <rect x="30" y="50" width="150" height="80" rx="8" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="105" y="80" text-anchor="middle" font-size="16" fill="#92400e" font-family="'Amiri', serif" font-weight="bold">74/100</text>
+        <text x="105" y="105" text-anchor="middle" font-size="11" fill="#92400e">Fraction (كسر)</text>
+        <line x1="180" y1="90" x2="220" y2="90" stroke="#dc2626" stroke-width="3" marker-end="url(#arrow1)"/>
+        <text x="200" y="80" text-anchor="middle" font-size="10" fill="#dc2626">÷</text>
+        <rect x="220" y="50" width="150" height="80" rx="8" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="295" y="80" text-anchor="middle" font-size="16" fill="#92400e" font-family="'Amiri', serif" font-weight="bold">0.74</text>
+        <text x="295" y="105" text-anchor="middle" font-size="11" fill="#92400e">Decimal (عشري)</text>
+        <rect x="30" y="150" width="340" height="50" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="170" text-anchor="middle" font-size="12" fill="#92400e">Rule: Divide numerator by denominator</text>
+        <text x="200" y="190" text-anchor="middle" font-size="11" fill="#92400e">القاعدة: اقسم البسط على المقام</text>
+        <rect x="30" y="210" width="340" height="30" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="230" text-anchor="middle" font-size="11" fill="#92400e">74 ÷ 100 = 0.74 ✓</text>
+        <defs><marker id="arrow1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/></marker></defs>
+    </svg>`,
+    
+    mixed_number: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">🔢 العدد الكسري إلى عشري</text>
+        <rect x="30" y="50" width="150" height="80" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+        <text x="105" y="80" text-anchor="middle" font-size="16" fill="#1e40af" font-family="'Amiri', serif" font-weight="bold">5¾</text>
+        <text x="105" y="105" text-anchor="middle" font-size="11" fill="#1e40af">Mixed Number</text>
+        <line x1="180" y1="90" x2="220" y2="90" stroke="#dc2626" stroke-width="3" marker-end="url(#arrow2)"/>
+        <text x="200" y="80" text-anchor="middle" font-size="10" fill="#dc2626">=</text>
+        <rect x="220" y="50" width="150" height="80" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+        <text x="295" y="80" text-anchor="middle" font-size="16" fill="#1e40af" font-family="'Amiri', serif" font-weight="bold">5.75</text>
+        <text x="295" y="105" text-anchor="middle" font-size="11" fill="#1e40af">Decimal</text>
+        <rect x="30" y="150" width="340" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="175" text-anchor="middle" font-size="12" fill="#1e40af">Steps:</text>
+        <text x="200" y="195" text-anchor="middle" font-size="11" fill="#1e40af">1) Convert fraction: 3/4 = 0.75</text>
+        <text x="200" y="215" text-anchor="middle" font-size="11" fill="#1e40af">2) Add to whole number: 5 + 0.75 = 5.75</text>
+        <text x="200" y="235" text-anchor="middle" font-size="11" fill="#1e40af">الخطوات: حوّل الكسر ثم أضف للعدد الصحيح</text>
+        <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/></marker></defs>
+    </svg>`,
+    
+    decimal_to_fraction: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#9f1239" font-weight="bold">🔄 تحويل العشري إلى كسر</text>
+        <rect x="30" y="50" width="150" height="80" rx="8" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/>
+        <text x="105" y="80" text-anchor="middle" font-size="16" fill="#9f1239" font-family="'Amiri', serif" font-weight="bold">0.55</text>
+        <text x="105" y="105" text-anchor="middle" font-size="11" fill="#9f1239">Decimal</text>
+        <line x1="180" y1="90" x2="220" y2="90" stroke="#dc2626" stroke-width="3" marker-end="url(#arrow3)"/>
+        <text x="200" y="80" text-anchor="middle" font-size="10" fill="#dc2626">→</text>
+        <rect x="220" y="50" width="150" height="80" rx="8" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/>
+        <text x="295" y="80" text-anchor="middle" font-size="16" fill="#9f1239" font-family="'Amiri', serif" font-weight="bold">11/20</text>
+        <text x="295" y="105" text-anchor="middle" font-size="11" fill="#9f1239">Fraction</text>
+        <rect x="30" y="150" width="340" height="90" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="175" text-anchor="middle" font-size="12" fill="#9f1239">Steps:</text>
+        <text x="200" y="195" text-anchor="middle" font-size="11" fill="#9f1239">1) Write: 0.55 = 55/100</text>
+        <text x="200" y="215" text-anchor="middle" font-size="11" fill="#9f1239">2) Simplify: 55/100 = 11/20</text>
+        <text x="200" y="235" text-anchor="middle" font-size="11" fill="#9f1239">الخطوات: اكتب على 100 ثم بسّط</text>
+        <defs><marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/></marker></defs>
+    </svg>`,
+    
+    repeating_decimal: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">🔁 العدد العشري الدوري</text>
+        <rect x="30" y="50" width="150" height="80" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="105" y="80" text-anchor="middle" font-size="16" fill="#065f46" font-family="'Amiri', serif" font-weight="bold">7/9</text>
+        <text x="105" y="105" text-anchor="middle" font-size="11" fill="#065f46">Fraction</text>
+        <line x1="180" y1="90" x2="220" y2="90" stroke="#dc2626" stroke-width="3" marker-end="url(#arrow4)"/>
+        <text x="200" y="80" text-anchor="middle" font-size="10" fill="#dc2626">=</text>
+        <rect x="220" y="50" width="150" height="80" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="295" y="80" text-anchor="middle" font-size="16" fill="#065f46" font-family="'Amiri', serif" font-weight="bold">0.777...</text>
+        <text x="295" y="105" text-anchor="middle" font-size="11" fill="#065f46">Repeating</text>
+        <rect x="30" y="150" width="340" height="90" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="175" text-anchor="middle" font-size="12" fill="#065f46">When division never ends with 0</text>
+        <text x="200" y="195" text-anchor="middle" font-size="11" fill="#065f46">Use bar notation: 0.7̄</text>
+        <text x="200" y="215" text-anchor="middle" font-size="11" fill="#065f46">عندما لا تنتهي القسمة بصفر</text>
+        <text x="200" y="235" text-anchor="middle" font-size="11" fill="#065f46">استخدم رمز التكرار: 0.7̄</text>
+        <defs><marker id="arrow4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/></marker></defs>
+    </svg>`,
+    
+    division_method: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#5b21b6" font-weight="bold">➗ طريقة القسمة الطويلة</text>
+        <text x="200" y="50" text-anchor="middle" font-size="12" fill="#5b21b6">3 ÷ 8 = 0.375</text>
+        <rect x="100" y="70" width="200" height="180" rx="6" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="200" y="95" text-anchor="middle" font-size="14" fill="#5b21b6" font-family="'Amiri', serif">8 ) 3.000</text>
+        <text x="200" y="120" text-anchor="middle" font-size="12" fill="#5b21b6">- 2.4</text>
+        <text x="200" y="140" text-anchor="middle" font-size="12" fill="#5b21b6">────</text>
+        <text x="200" y="160" text-anchor="middle" font-size="12" fill="#5b21b6">0.60</text>
+        <text x="200" y="180" text-anchor="middle" font-size="12" fill="#5b21b6">- 0.56</text>
+        <text x="200" y="200" text-anchor="middle" font-size="12" fill="#5b21b6">────</text>
+        <text x="200" y="220" text-anchor="middle" font-size="12" fill="#5b21b6">0.040</text>
+        <text x="200" y="240" text-anchor="middle" font-size="12" fill="#5b21b6">- 0.040</text>
+        <text x="200" y="260" text-anchor="middle" font-size="12" fill="#16a34a" font-weight="bold">──── = 0 ✓</text>
+    </svg>`
+};
+
+// ==================== EXAM DATA - 25 QUESTIONS ====================
+const examQuestions = [
+    // Section 1: Multiple Choice - Fraction to Decimal (Q1-Q8)
+    {
+        id: 1, section: 1, type: 'mc',
+        q: { ar: '<strong>س1:</strong> اكتب <span class="math-display">74/100</span> في صورة عدد عشري.', en: '<strong>Q1:</strong> Write <span class="math-display">74/100</span> as a decimal.' },
+        svg: svgGraphs.fraction_to_decimal,
+        options: [
+            { ar: '<span class="math-display">0.74</span>', en: '<span class="math-display">0.74</span>' },
+            { ar: '<span class="math-display">7.4</span>', en: '<span class="math-display">7.4</span>' },
+            { ar: '<span class="math-display">0.074</span>', en: '<span class="math-display">0.074</span>' },
+            { ar: '<span class="math-display">74.0</span>', en: '<span class="math-display">74.0</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '74 ÷ 100 = 0.74', en: '74 ÷ 100 = 0.74' }
+    },
+    {
+        id: 2, section: 1, type: 'mc',
+        q: { ar: '<strong>س2:</strong> اكتب <span class="math-display">7/20</span> في صورة عدد عشري.', en: '<strong>Q2:</strong> Write <span class="math-display">7/20</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">0.35</span>', en: '<span class="math-display">0.35</span>' },
+            { ar: '<span class="math-display">0.7</span>', en: '<span class="math-display">0.7</span>' },
+            { ar: '<span class="math-display">0.2</span>', en: '<span class="math-display">0.2</span>' },
+            { ar: '<span class="math-display">0.3</span>', en: '<span class="math-display">0.3</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '7/20 = 35/100 = 0.35', en: '7/20 = 35/100 = 0.35' }
+    },
+    {
+        id: 3, section: 1, type: 'mc',
+        q: { ar: '<strong>س3:</strong> اكتب <span class="math-display">5¾</span> في صورة عدد عشري.', en: '<strong>Q3:</strong> Write <span class="math-display">5¾</span> as a decimal.' },
+        svg: svgGraphs.mixed_number,
+        options: [
+            { ar: '<span class="math-display">5.75</span>', en: '<span class="math-display">5.75</span>' },
+            { ar: '<span class="math-display">5.34</span>', en: '<span class="math-display">5.34</span>' },
+            { ar: '<span class="math-display">5.25</span>', en: '<span class="math-display">5.25</span>' },
+            { ar: '<span class="math-display">5.5</span>', en: '<span class="math-display">5.5</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '5¾ = 5 + 3/4 = 5 + 0.75 = 5.75', en: '5¾ = 5 + 3/4 = 5 + 0.75 = 5.75' }
+    },
+    {
+        id: 4, section: 1, type: 'mc',
+        q: { ar: '<strong>س4:</strong> اكتب <span class="math-display">3/8</span> في صورة عدد عشري.', en: '<strong>Q4:</strong> Write <span class="math-display">3/8</span> as a decimal.' },
+        svg: svgGraphs.division_method,
+        options: [
+            { ar: '<span class="math-display">0.375</span>', en: '<span class="math-display">0.375</span>' },
+            { ar: '<span class="math-display">0.3</span>', en: '<span class="math-display">0.3</span>' },
+            { ar: '<span class="math-display">0.38</span>', en: '<span class="math-display">0.38</span>' },
+            { ar: '<span class="math-display">0.333</span>', en: '<span class="math-display">0.333</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '3 ÷ 8 = 0.375', en: '3 ÷ 8 = 0.375' }
+    },
+    {
+        id: 5, section: 1, type: 'mc',
+        q: { ar: '<strong>س5:</strong> اكتب <span class="math-display">-1/40</span> في صورة عدد عشري.', en: '<strong>Q5:</strong> Write <span class="math-display">-1/40</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">-0.025</span>', en: '<span class="math-display">-0.025</span>' },
+            { ar: '<span class="math-display">-0.25</span>', en: '<span class="math-display">-0.25</span>' },
+            { ar: '<span class="math-display">-0.4</span>', en: '<span class="math-display">-0.4</span>' },
+            { ar: '<span class="math-display">-0.04</span>', en: '<span class="math-display">-0.04</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '1 ÷ 40 = 0.025، إذن -1/40 = -0.025', en: '1 ÷ 40 = 0.025, so -1/40 = -0.025' }
+    },
+    {
+        id: 6, section: 1, type: 'mc',
+        q: { ar: '<strong>س6:</strong> اكتب <span class="math-display">7/9</span> في صورة عدد عشري.', en: '<strong>Q6:</strong> Write <span class="math-display">7/9</span> as a decimal.' },
+        svg: svgGraphs.repeating_decimal,
+        options: [
+            { ar: '<span class="math-display">0.777... = 0.7̄</span>', en: '<span class="math-display">0.777... = 0.7̄</span>' },
+            { ar: '<span class="math-display">0.7</span>', en: '<span class="math-display">0.7</span>' },
+            { ar: '<span class="math-display">0.79</span>', en: '<span class="math-display">0.79</span>' },
+            { ar: '<span class="math-display">0.77</span>', en: '<span class="math-display">0.77</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '7 ÷ 9 = 0.777... = 0.7̄ (عدد عشري دوري)', en: '7 ÷ 9 = 0.777... = 0.7̄ (repeating decimal)' }
+    },
+    {
+        id: 7, section: 1, type: 'mc',
+        q: { ar: '<strong>س7:</strong> اكتب <span class="math-display">1/2</span> في صورة عدد عشري.', en: '<strong>Q7:</strong> Write <span class="math-display">1/2</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">0.5</span>', en: '<span class="math-display">0.5</span>' },
+            { ar: '<span class="math-display">0.2</span>', en: '<span class="math-display">0.2</span>' },
+            { ar: '<span class="math-display">0.1</span>', en: '<span class="math-display">0.1</span>' },
+            { ar: '<span class="math-display">1.2</span>', en: '<span class="math-display">1.2</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '1 ÷ 2 = 0.5', en: '1 ÷ 2 = 0.5' }
+    },
+    {
+        id: 8, section: 1, type: 'mc',
+        q: { ar: '<strong>س8:</strong> اكتب <span class="math-display">-4 4/25</span> في صورة عدد عشري.', en: '<strong>Q8:</strong> Write <span class="math-display">-4 4/25</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">-4.16</span>', en: '<span class="math-display">-4.16</span>' },
+            { ar: '<span class="math-display">-4.4</span>', en: '<span class="math-display">-4.4</span>' },
+            { ar: '<span class="math-display">-4.25</span>', en: '<span class="math-display">-4.25</span>' },
+            { ar: '<span class="math-display">-4.04</span>', en: '<span class="math-display">-4.04</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '4/25 = 16/100 = 0.16، إذن -4 4/25 = -4.16', en: '4/25 = 16/100 = 0.16, so -4 4/25 = -4.16' }
+    },
+    // Section 2: More MC Questions (Q9-Q15)
+    {
+        id: 9, section: 2, type: 'mc',
+        q: { ar: '<strong>س9:</strong> اكتب <span class="math-display">1/8</span> في صورة عدد عشري.', en: '<strong>Q9:</strong> Write <span class="math-display">1/8</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">0.125</span>', en: '<span class="math-display">0.125</span>' },
+            { ar: '<span class="math-display">0.8</span>', en: '<span class="math-display">0.8</span>' },
+            { ar: '<span class="math-display">0.18</span>', en: '<span class="math-display">0.18</span>' },
+            { ar: '<span class="math-display">1.8</span>', en: '<span class="math-display">1.8</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '1 ÷ 8 = 0.125', en: '1 ÷ 8 = 0.125' }
+    },
+    {
+        id: 10, section: 2, type: 'mc',
+        q: { ar: '<strong>س10:</strong> اكتب <span class="math-display">3/16</span> في صورة عدد عشري.', en: '<strong>Q10:</strong> Write <span class="math-display">3/16</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">0.1875</span>', en: '<span class="math-display">0.1875</span>' },
+            { ar: '<span class="math-display">0.3</span>', en: '<span class="math-display">0.3</span>' },
+            { ar: '<span class="math-display">0.16</span>', en: '<span class="math-display">0.16</span>' },
+            { ar: '<span class="math-display">0.316</span>', en: '<span class="math-display">0.316</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '3 ÷ 16 = 0.1875', en: '3 ÷ 16 = 0.1875' }
+    },
+    {
+        id: 11, section: 2, type: 'mc',
+        q: { ar: '<strong>س11:</strong> اكتب <span class="math-display">-33/50</span> في صورة عدد عشري.', en: '<strong>Q11:</strong> Write <span class="math-display">-33/50</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">-0.66</span>', en: '<span class="math-display">-0.66</span>' },
+            { ar: '<span class="math-display">-0.33</span>', en: '<span class="math-display">-0.33</span>' },
+            { ar: '<span class="math-display">-0.5</span>', en: '<span class="math-display">-0.5</span>' },
+            { ar: '<span class="math-display">-0.63</span>', en: '<span class="math-display">-0.63</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '33/50 = 66/100 = 0.66، إذن -33/50 = -0.66', en: '33/50 = 66/100 = 0.66, so -33/50 = -0.66' }
+    },
+    {
+        id: 12, section: 2, type: 'mc',
+        q: { ar: '<strong>س12:</strong> اكتب <span class="math-display">-17/40</span> في صورة عدد عشري.', en: '<strong>Q12:</strong> Write <span class="math-display">-17/40</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">-0.425</span>', en: '<span class="math-display">-0.425</span>' },
+            { ar: '<span class="math-display">-0.17</span>', en: '<span class="math-display">-0.17</span>' },
+            { ar: '<span class="math-display">-0.4</span>', en: '<span class="math-display">-0.4</span>' },
+            { ar: '<span class="math-display">-0.47</span>', en: '<span class="math-display">-0.47</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '17 ÷ 40 = 0.425، إذن -17/40 = -0.425', en: '17 ÷ 40 = 0.425, so -17/40 = -0.425' }
+    },
+    {
+        id: 13, section: 2, type: 'mc',
+        q: { ar: '<strong>س13:</strong> اكتب <span class="math-display">5 7/8</span> في صورة عدد عشري.', en: '<strong>Q13:</strong> Write <span class="math-display">5 7/8</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">5.875</span>', en: '<span class="math-display">5.875</span>' },
+            { ar: '<span class="math-display">5.78</span>', en: '<span class="math-display">5.78</span>' },
+            { ar: '<span class="math-display">5.7</span>', en: '<span class="math-display">5.7</span>' },
+            { ar: '<span class="math-display">5.87</span>', en: '<span class="math-display">5.87</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '7/8 = 0.875، إذن 5 7/8 = 5.875', en: '7/8 = 0.875, so 5 7/8 = 5.875' }
+    },
+    {
+        id: 14, section: 2, type: 'mc',
+        q: { ar: '<strong>س14:</strong> اكتب <span class="math-display">9 3/8</span> في صورة عدد عشري.', en: '<strong>Q14:</strong> Write <span class="math-display">9 3/8</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">9.375</span>', en: '<span class="math-display">9.375</span>' },
+            { ar: '<span class="math-display">9.3</span>', en: '<span class="math-display">9.3</span>' },
+            { ar: '<span class="math-display">9.38</span>', en: '<span class="math-display">9.38</span>' },
+            { ar: '<span class="math-display">9.83</span>', en: '<span class="math-display">9.83</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '3/8 = 0.375، إذن 9 3/8 = 9.375', en: '3/8 = 0.375, so 9 3/8 = 9.375' }
+    },
+    {
+        id: 15, section: 2, type: 'mc',
+        q: { ar: '<strong>س15:</strong> اكتب <span class="math-display">-8/9</span> في صورة عدد عشري.', en: '<strong>Q15:</strong> Write <span class="math-display">-8/9</span> as a decimal.' },
+        options: [
+            { ar: '<span class="math-display">-0.888... = -0.8̄</span>', en: '<span class="math-display">-0.888... = -0.8̄</span>' },
+            { ar: '<span class="math-display">-0.8</span>', en: '<span class="math-display">-0.8</span>' },
+            { ar: '<span class="math-display">-0.89</span>', en: '<span class="math-display">-0.89</span>' },
+            { ar: '<span class="math-display">-0.9</span>', en: '<span class="math-display">-0.9</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '8 ÷ 9 = 0.888... = 0.8̄، إذن -8/9 = -0.8̄', en: '8 ÷ 9 = 0.888... = 0.8̄, so -8/9 = -0.8̄' }
+    },
+    // Section 3: Written Questions - Decimal to Fraction (Q16-Q20)
+    {
+        id: 16, section: 3, type: 'written',
+        q: { ar: '<strong>س16 (كتابي):</strong> اكتب <span class="math-display">0.55</span> في صورة كسر في أبسط صورة.', en: '<strong>Q16 (Written):</strong> Write <span class="math-display">0.55</span> as a fraction in simplest form.' },
+        svg: svgGraphs.decimal_to_fraction,
+        answer: { ar: '55/100 = 11/20', en: '55/100 = 11/20' },
+        solution: { ar: '0.55 = 55/100 = 11/20 (بقسمة البسط والمقام على 5)', en: '0.55 = 55/100 = 11/20 (divide numerator and denominator by 5)' }
+    },
+    {
+        id: 17, section: 3, type: 'written',
+        q: { ar: '<strong>س17 (كتابي):</strong> اكتب <span class="math-display">-0.2</span> في صورة كسر في أبسط صورة.', en: '<strong>Q17 (Written):</strong> Write <span class="math-display">-0.2</span> as a fraction in simplest form.' },
+        answer: { ar: '-1/5', en: '-1/5' },
+        solution: { ar: '-0.2 = -2/10 = -1/5', en: '-0.2 = -2/10 = -1/5' }
+    },
+    {
+        id: 18, section: 3, type: 'written',
+        q: { ar: '<strong>س18 (كتابي):</strong> اكتب <span class="math-display">5.96</span> في صورة كسر في أبسط صورة.', en: '<strong>Q18 (Written):</strong> Write <span class="math-display">5.96</span> as a fraction in simplest form.' },
+        answer: { ar: '5 24/25 أو 149/25', en: '5 24/25 or 149/25' },
+        solution: { ar: '5.96 = 5 96/100 = 5 24/25', en: '5.96 = 5 96/100 = 5 24/25' }
+    },
+    {
+        id: 19, section: 3, type: 'written',
+        q: { ar: '<strong>س19 (كتابي):</strong> اكتب <span class="math-display">0.375</span> في صورة كسر في أبسط صورة.', en: '<strong>Q19 (Written):</strong> Write <span class="math-display">0.375</span> as a fraction in simplest form.' },
+        answer: { ar: '3/8', en: '3/8' },
+        solution: { ar: '0.375 = 375/1000 = 3/8 (بقسمة على 125)', en: '0.375 = 375/1000 = 3/8 (divide by 125)' }
+    },
+    {
+        id: 20, section: 3, type: 'written',
+        q: { ar: '<strong>س20 (كتابي):</strong> اكتب <span class="math-display">0.777...</span> في صورة كسر.', en: '<strong>Q20 (Written):</strong> Write <span class="math-display">0.777...</span> as a fraction.' },
+        answer: { ar: '7/9', en: '7/9' },
+        solution: { ar: '0.777... = 7/9 (الرقم المتكرر 7 فوق 9)', en: '0.777... = 7/9 (repeating digit 7 over 9)' }
+    },
+    // Section 4: Mixed Questions (Q21-Q25)
+    {
+        id: 21, section: 4, type: 'mc',
+        q: { ar: '<strong>س21:</strong> أي من التالي يساوي <span class="math-display">3/10</span>؟', en: '<strong>Q21:</strong> Which equals <span class="math-display">3/10</span>?' },
+        options: [
+            { ar: '<span class="math-display">0.3</span>', en: '<span class="math-display">0.3</span>' },
+            { ar: '<span class="math-display">0.03</span>', en: '<span class="math-display">0.03</span>' },
+            { ar: '<span class="math-display">0.33</span>', en: '<span class="math-display">0.33</span>' },
+            { ar: '<span class="math-display">3.0</span>', en: '<span class="math-display">3.0</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '3/10 = 0.3', en: '3/10 = 0.3' }
+    },
+    {
+        id: 22, section: 4, type: 'mc',
+        q: { ar: '<strong>س22:</strong> أي من التالي يساوي <span class="math-display">3/25</span>؟', en: '<strong>Q22:</strong> Which equals <span class="math-display">3/25</span>?' },
+        options: [
+            { ar: '<span class="math-display">0.12</span>', en: '<span class="math-display">0.12</span>' },
+            { ar: '<span class="math-display">0.3</span>', en: '<span class="math-display">0.3</span>' },
+            { ar: '<span class="math-display">0.25</span>', en: '<span class="math-display">0.25</span>' },
+            { ar: '<span class="math-display">0.03</span>', en: '<span class="math-display">0.03</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '3/25 = 12/100 = 0.12', en: '3/25 = 12/100 = 0.12' }
+    },
+    {
+        id: 23, section: 4, type: 'mc',
+        q: { ar: '<strong>س23:</strong> أي من التالي يساوي <span class="math-display">-6 1/2</span>؟', en: '<strong>Q23:</strong> Which equals <span class="math-display">-6 1/2</span>?' },
+        options: [
+            { ar: '<span class="math-display">-6.5</span>', en: '<span class="math-display">-6.5</span>' },
+            { ar: '<span class="math-display">-6.2</span>', en: '<span class="math-display">-6.2</span>' },
+            { ar: '<span class="math-display">-6.05</span>', en: '<span class="math-display">-6.05</span>' },
+            { ar: '<span class="math-display">-6.12</span>', en: '<span class="math-display">-6.12</span>' }
+        ],
+        correct: 0,
+        answer: { ar: '-6 1/2 = -6.5', en: '-6 1/2 = -6.5' }
+    },
+    {
+        id: 24, section: 4, type: 'written',
+        q: { ar: '<strong>س24 (كتابي):</strong> اكتب <span class="math-display">-1/6</span> في صورة عدد عشري (استخدم رمز التكرار).', en: '<strong>Q24 (Written):</strong> Write <span class="math-display">-1/6</span> as a decimal (use bar notation).' },
+        answer: { ar: '-0.1666... = -0.16̄', en: '-0.1666... = -0.16̄' },
+        solution: { ar: '1 ÷ 6 = 0.1666... = 0.16̄، إذن -1/6 = -0.16̄', en: '1 ÷ 6 = 0.1666... = 0.16̄, so -1/6 = -0.16̄' }
+    },
+    {
+        id: 25, section: 4, type: 'written',
+        q: { ar: '<strong>س25 (كتابي):</strong> اكتب <span class="math-display">2 6/11</span> في صورة عدد عشري (استخدم رمز التكرار).', en: '<strong>Q25 (Written):</strong> Write <span class="math-display">2 6/11</span> as a decimal (use bar notation).' },
+        answer: { ar: '2.545454... = 2.54̄', en: '2.545454... = 2.54̄' },
+        solution: { ar: '6 ÷ 11 = 0.545454... = 0.54̄، إذن 2 6/11 = 2.54̄', en: '6 ÷ 11 = 0.545454... = 0.54̄, so 2 6/11 = 2.54̄' }
+    }
+];
+
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('show');
+    if (saveIndicatorTimeout) clearTimeout(saveIndicatorTimeout);
+    saveIndicatorTimeout = setTimeout(() => indicator.classList.remove('show'), 1500);
+}
+
+function saveState() {
+    try {
+        const answers = {};
+        const writtenAnswers = {};
+        examQuestions.forEach(q => {
+            if (q.type === 'mc') {
+                const selected = document.querySelector('input[name="q'+q.id+'"]:checked');
+                if (selected) answers[q.id] = selected.value;
+            } else {
+                const input = document.getElementById('written_'+q.id);
+                if (input) writtenAnswers[q.id] = input.value;
+            }
+        });
+        const state = {
+            lang: currentLang,
+            studentName: document.getElementById('studentName').value,
+            studentClass: document.getElementById('studentClass').value,
+            examDate: document.getElementById('examDate').value,
+            answers: answers,
+            writtenAnswers: writtenAnswers,
+            timeRemaining: timeRemaining,
+            savedAt: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        showSaveIndicator();
+    } catch (e) { console.error('Save error:', e); }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+}
+
+function restoreAnswers(answers, writtenAnswers) {
+    if (answers) {
+        for (const [idx, val] of Object.entries(answers)) {
+            const radio = document.querySelector('input[name="q'+idx+'"][value="'+val+'"]');
+            if (radio) radio.checked = true;
+        }
+    }
+    if (writtenAnswers) {
+        for (const [idx, val] of Object.entries(writtenAnswers)) {
+            const input = document.getElementById('written_'+idx);
+            if (input) input.value = val;
+        }
+    }
+}
+
+function clearAllAnswers() {
+    const msg = currentLang === 'ar' ? '⚠️ هل أنت متأكد من مسح جميع الإجابات؟' : '⚠️ Clear all answers?';
+    if (confirm(msg)) {
+        examQuestions.forEach(q => {
+            if (q.type === 'mc') {
+                const radios = document.querySelectorAll('input[name="q'+q.id+'"]');
+                radios.forEach(r => r.checked = false);
+            } else {
+                const input = document.getElementById('written_'+q.id);
+                if (input) {
+                    input.value = '';
+                    input.classList.remove('correct-input', 'incorrect-input');
+                }
+            }
+            const sol = document.getElementById('solution-'+q.id);
+            if (sol) sol.classList.remove('show');
+        });
+        localStorage.removeItem(STORAGE_KEY);
+    }
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.body.classList.toggle('en-mode', lang === 'en');
+    renderExam();
+}
+
+function renderExam() {
+    const container = document.getElementById('exam-content');
+    const labels = { ar: { option: ['أ', 'ب', 'ج', 'د'], answer: '✅ الإجابة:' }, en: { option: ['A', 'B', 'C', 'D'], answer: '✅ Answer:' } };
+    const lbl = labels[currentLang];
+    let html = '';
+    
+    const sectionTitles = {
+        1: { ar: '🔹 القسم 1: تحويل الكسور إلى أعداد عشرية (س1-س8)', en: '🔹 Section 1: Fractions to Decimals (Q1-Q8)' },
+        2: { ar: '🔹 القسم 2: المزيد من التحويلات (س9-س15)', en: '🔹 Section 2: More Conversions (Q9-Q15)' },
+        3: { ar: '🔹 القسم 3: أسئلة كتابية - من عشري إلى كسر (س16-س20)', en: '🔹 Section 3: Written - Decimal to Fraction (Q16-Q20)' },
+        4: { ar: '🔹 القسم 4: أسئلة متنوعة (س21-س25)', en: '🔹 Section 4: Mixed Questions (Q21-Q25)' }
+    };
+    
+    const badgeClasses = ['module-1', 'module-2', 'module-3', 'module-4'];
+    
+    for (let sec = 1; sec <= 4; sec++) {
+        html += '<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-amber-100">';
+        html += '<div class="text-center mb-4"><span class="module-badge ' + badgeClasses[sec-1] + '">' + sectionTitles[sec][currentLang] + '</span></div>';
+        html += '<div class="space-y-6">';
+        
+        examQuestions.filter(q => q.section === sec).forEach((q) => {
+            html += '<div class="border-r-4 border-amber-400 pr-4 py-3" id="question-' + q.id + '">';
+            html += '<div class="mb-3"><span class="arabic-math">' + q.q[currentLang] + '</span></div>';
+            
+            if (q.svg) html += '<div class="graph-container">' + q.svg + '</div>';
+            
+            if (q.type === 'mc') {
+                q.options.forEach((opt, oIdx) => {
+                    html += '<label class="cursor-pointer block mt-2 mr-4 hover:bg-amber-50 rounded-lg p-2 transition">';
+                    html += '<input type="radio" name="q' + q.id + '" value="' + String.fromCharCode(97 + oIdx) + '" class="mr-2 ml-2" onchange="saveState()">';
+                    html += '<span class="arabic-math">' + lbl.option[oIdx] + ') ' + opt[currentLang] + '</span>';
+                    html += '</label>';
+                });
+            } else {
+                html += '<input type="text" id="written-' + q.id + '" class="answer-input" placeholder="' + (currentLang === 'ar' ? 'اكتب إجابتك هنا...' : 'Write your answer here...') + '" oninput="saveState()">';
+            }
+            
+            html += '<div class="flex gap-2 mt-2">';
+            if (q.type === 'mc') {
+                html += '<button onclick="checkAnswer(' + q.id + ')" class="check-btn">' + (currentLang === 'ar' ? '✓ تحقق' : '✓ Check') + '</button>';
+            }
+            html += '<button onclick="toggleSolution(' + q.id + ')" class="show-answer-btn">' + (currentLang === 'ar' ? '📖 أظهر الحل' : '📖 Show Solution') + '</button>';
+            html += '</div>';
+            
+            html += '<div id="solution-' + q.id + '" class="solution-box">';
+            html += '<strong class="text-green-700">' + lbl.answer + ' </strong>';
+            html += '<span class="arabic-math text-green-700">' + q.answer[currentLang] + '</span><br>';
+            if (q.solution) {
+                html += '<span class="text-sm text-green-700 mt-2 block arabic-math">' + q.solution[currentLang] + '</span>';
+            }
+            html += '</div>';
+            
+            html += '</div>';
+        });
+        
+        html += '</div></section>';
+    }
+    
+    container.innerHTML = html;
+}
+
+function checkAnswer(qId) {
+    const q = examQuestions.find(x => x.id === qId);
+    const selected = document.querySelector('input[name="q'+qId+'"]:checked');
+    
+    if (!selected) {
+        alert(currentLang === 'ar' ? '⚠️ الرجاء اختيار إجابة أولاً' : '⚠️ Please select an answer first');
+        return;
+    }
+    
+    const isCorrect = selected.value === String.fromCharCode(97 + q.correct);
+    const radios = document.querySelectorAll('input[name="q'+qId+'"]');
+    radios.forEach(r => {
+        const parent = r.closest('label');
+        if (parent) {
+            parent.classList.remove('correct', 'incorrect');
+            if (r.value === String.fromCharCode(97 + q.correct)) {
+                parent.classList.add('correct');
+            } else if (r.checked) {
+                parent.classList.add('incorrect');
+            }
+        }
+    });
+    
+    const solution = document.getElementById('solution-' + qId);
+    solution.classList.add('show');
+    
+    if (isCorrect) {
+        alert(currentLang === 'ar' ? '✅ إجابة صحيحة! أحسنت!' : '✅ Correct answer! Well done!');
+    } else {
+        alert(currentLang === 'ar' ? '❌ إجابة غير صحيحة. راجع الحل.' : '❌ Incorrect answer. Check the solution.');
+    }
+}
+
+function toggleSolution(qId) {
+    const solution = document.getElementById('solution-' + qId);
+    solution.classList.toggle('show');
+}
+
+function checkAllAnswers() {
+    let correctCount = 0;
+    let totalMC = 0;
+    let totalWritten = 0;
+    let writtenAnswered = 0;
+    
+    examQuestions.forEach(q => {
+        if (q.type === 'mc') {
+            totalMC++;
+            const selected = document.querySelector('input[name="q'+q.id+'"]:checked');
+            const li = document.getElementById('question-' + q.id);
+            if (selected) {
+                const isCorrect = selected.value === String.fromCharCode(97 + q.correct);
+                const radios = document.querySelectorAll('input[name="q'+q.id+'"]');
+                radios.forEach(r => {
+                    const parent = r.closest('label');
+                    if (parent) {
+                        parent.classList.remove('correct', 'incorrect');
+                        if (r.value === String.fromCharCode(97 + q.correct)) {
+                            parent.classList.add('correct');
+                        } else if (r.checked) {
+                            parent.classList.add('incorrect');
+                        }
+                    }
+                });
+                if (isCorrect) correctCount++;
+            }
+        } else {
+            totalWritten++;
+            const input = document.getElementById('written-'+q.id);
+            if (input && input.value.trim().length > 0) {
+                writtenAnswered++;
+                input.classList.add('correct-input');
+            }
+        }
+    });
+    
+    const mcScore = (correctCount / totalMC) * 60;
+    const writtenScore = (writtenAnswered / totalWritten) * 40;
+    const totalScore = Math.round(mcScore + writtenScore);
+    
+    alert(currentLang === 'ar' ? 
+        `📊 نتيجتك:\nالاختياري: ${correctCount}/${totalMC} = ${Math.round(mcScore)} درجة\nالكتابي: ${writtenAnswered}/${totalWritten} أجبت عليها = ${Math.round(writtenScore)} درجة\nالمجموع: ${totalScore}/100` : 
+        `📊 Your score:\nMC: ${correctCount}/${totalMC} = ${Math.round(mcScore)} pts\nWritten: ${writtenAnswered}/${totalWritten} answered = ${Math.round(writtenScore)} pts\nTotal: ${totalScore}/100`);
+}
+
+function showAllSolutions() {
+    examQuestions.forEach(q => {
+        const solution = document.getElementById('solution-' + q.id);
+        solution.classList.add('show');
+    });
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining % 60 === 0) saveState();
+        if (timeRemaining <= 600) document.getElementById('timer').classList.add('timer-warning');
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert(currentLang === 'ar' ? "⏰ انتهى الوقت!" : "⏰ Time's up!");
+            checkAllAnswers();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timeRemaining / 60);
+    const s = timeRemaining % 60;
+    document.getElementById('timer').textContent = m.toString().padStart(2,'0') + ':' + s.toString().padStart(2,'0');
+}
+
+function gradeExam() {
+    let correctCount = 0;
+    let totalMC = 0;
+    let writtenAnswered = 0;
+    let totalWritten = 0;
+    const sectionScores = [0, 0, 0, 0];
+    const sectionMax = [48, 42, 40, 30]; // MC1: 8×6, MC2: 7×6, Written: 5×8, Mixed: 2×6+3×8
+    
+    examQuestions.forEach(q => {
+        if (q.type === 'mc') {
+            totalMC++;
+            const selected = document.querySelector('input[name="q'+q.id+'"]:checked');
+            const li = document.getElementById('question-' + q.id);
+            if (selected) {
+                const isCorrect = selected.value === String.fromCharCode(97 + q.correct);
+                const radios = document.querySelectorAll('input[name="q'+q.id+'"]');
+                radios.forEach(r => {
+                    const parent = r.closest('label');
+                    if (parent) {
+                        parent.classList.remove('correct', 'incorrect');
+                        if (r.value === String.fromCharCode(97 + q.correct)) {
+                            parent.classList.add('correct');
+                        } else if (r.checked) {
+                            parent.classList.add('incorrect');
+                        }
+                    }
+                });
+                if (isCorrect) {
+                    correctCount++;
+                    if (q.section === 1) sectionScores[0] += 6;
+                    else if (q.section === 2) sectionScores[1] += 6;
+                    else if (q.section === 4) sectionScores[3] += 6;
+                }
+            }
+        } else {
+            totalWritten++;
+            const input = document.getElementById('written-'+q.id);
+            if (input && input.value.trim().length > 0) {
+                writtenAnswered++;
+                input.classList.add('correct-input');
+                if (q.section === 3) sectionScores[2] += 8;
+                else if (q.section === 4) sectionScores[3] += 10;
+            }
+        }
+    });
+    
+    const totalScore = sectionScores.reduce((a, b) => a + b, 0);
+    document.getElementById('res-total').textContent = totalScore + ' / 100';
+    document.getElementById('res-name').textContent = document.getElementById('studentName').value || (currentLang === 'ar' ? 'بطل' : 'Champion');
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-US');
+    
+    const pc = document.getElementById('sections-performance');
+    pc.innerHTML = '';
+    const sectionTitles = {
+        1: { ar: 'تحويل الكسور إلى عشرية', en: 'Fractions to Decimals' },
+        2: { ar: 'مزيد من التحويلات', en: 'More Conversions' },
+        3: { ar: 'من عشري إلى كسر (كتابي)', en: 'Decimal to Fraction (Written)' },
+        4: { ar: 'أسئلة متنوعة', en: 'Mixed Questions' }
+    };
+    
+    for (let i = 0; i < 4; i++) {
+        pc.innerHTML += '<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">' + sectionTitles[i+1][currentLang] + '</span><span class="font-bold text-amber-700">' + sectionScores[i] + '/' + sectionMax[i] + '</span></div>';
+    }
+    
+    const badge = document.getElementById('success-badge');
+    const percentage = totalScore;
+    document.getElementById('success-percent').textContent = percentage + '%';
+    
+    if (currentLang === 'ar') {
+        if (percentage >= 90) { badge.textContent = '🌟 ممتاز جداً!'; badge.className = 'success-badge grade-excellent'; }
+        else if (percentage >= 75) { badge.textContent = '👏 ممتاز!'; badge.className = 'success-badge grade-good'; }
+        else if (percentage >= 50) { badge.textContent = '👍 جيد'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
+    } else {
+        if (percentage >= 90) { badge.textContent = '🌟 Outstanding!'; badge.className = 'success-badge grade-excellent'; }
+        else if (percentage >= 75) { badge.textContent = '👏 Excellent!'; badge.className = 'success-badge grade-good'; }
+        else if (percentage >= 50) { badge.textContent = '👍 Good'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
+    }
+    
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+    if (timerInterval) clearInterval(timerInterval);
+}
+
+function sendResultsToEmail() {
+    const btn = document.getElementById('sendEmailBtn');
+    const status = document.getElementById('emailStatus');
+    btn.disabled = true;
+    btn.textContent = currentLang === 'ar' ? '⏳ جاري الإرسال...' : '⏳ Sending...';
+    
+    const name = document.getElementById('studentName').value || 'N/A';
+    const studentClass = document.getElementById('studentClass').value || 'N/A';
+    const date = document.getElementById('examDate').value || new Date().toLocaleDateString();
+    const score = document.getElementById('res-total').textContent;
+    const successRate = document.getElementById('success-percent').textContent;
+    const badge = document.getElementById('success-badge').textContent;
+    
+    let answersHTML = '<div style="font-family:Arial; direction:rtl;">';
+    answersHTML += '<h2>📊 ' + (currentLang === 'ar' ? 'نتيجة امتحان الكسور والأعداد العشرية' : 'Fractions & Decimals Exam Result') + '</h2>';
+    answersHTML += '<p><strong>' + (currentLang === 'ar' ? 'الاسم' : 'Name') + ':</strong> ' + name + '</p>';
+    answersHTML += '<p><strong>' + (currentLang === 'ar' ? 'الشعبة' : 'Class') + ':</strong> ' + studentClass + '</p>';
+    answersHTML += '<p><strong>' + (currentLang === 'ar' ? 'التاريخ' : 'Date') + ':</strong> ' + date + '</p>';
+    answersHTML += '<p><strong>' + (currentLang === 'ar' ? 'الدرجة' : 'Score') + ':</strong> ' + score + ' (' + successRate + '%)</p>';
+    answersHTML += '<p><strong>' + (currentLang === 'ar' ? 'التقدير' : 'Grade') + ':</strong> ' + badge + '</p>';
+    answersHTML += '<hr><h3>' + (currentLang === 'ar' ? 'تفاصيل الإجابات:' : 'Answer Details:') + '</h3><table style="width:100%; border-collapse:collapse;">';
+    answersHTML += '<tr style="background:#d97706; color:white;"><th style="padding:8px; border:1px solid #ddd;">#</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'السؤال' : 'Question') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'إجابة الطالب' : 'Student Answer') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'الصحيحة' : 'Correct') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'النتيجة' : 'Result') + '</th></tr>';
+    
+    examQuestions.forEach(q => {
+        let userAnswer = '';
+        let isCorrect = false;
+        if (q.type === 'mc') {
+            const selected = document.querySelector('input[name="q'+q.id+'"]:checked');
+            if (selected) {
+                const si = selected.value.charCodeAt(0) - 97;
+                userAnswer = q.options[si][currentLang];
+                isCorrect = selected.value === String.fromCharCode(97 + q.correct);
+            } else {
+                userAnswer = currentLang === 'ar' ? 'لم يجب' : 'No answer';
+            }
+        } else {
+            const input = document.getElementById('written-'+q.id);
+            userAnswer = input ? input.value.trim() : (currentLang === 'ar' ? 'لم يجب' : 'No answer');
+            isCorrect = userAnswer.length > 0;
+        }
+        const rowBg = isCorrect ? '#dcfce7' : '#fee2e2';
+        answersHTML += '<tr style="background:' + rowBg + ';"><td style="padding:8px; border:1px solid #ddd; text-align:center;">' + q.id + '</td><td style="padding:8px; border:1px solid #ddd;">' + q.q[currentLang].replace(/<[^>]+>/g, '') + '</td><td style="padding:8px; border:1px solid #ddd;">' + userAnswer + '</td><td style="padding:8px; border:1px solid #ddd;">' + q.answer[currentLang] + '</td><td style="padding:8px; border:1px solid #ddd; text-align:center;">' + (isCorrect ? '✅' : '❌') + '</td></tr>';
+    });
+    
+    answersHTML += '</table></div>';
+    
+    const templateParams = {
+        to_email: TARGET_EMAIL,
+        student_name: name,
+        student_class: studentClass,
+        exam_date: date,
+        total_score: score,
+        success_rate: successRate,
+        grade: badge,
+        answers_table: answersHTML
+    };
+    
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+        .then(() => {
+            status.textContent = currentLang === 'ar' ? '✅ تم الإرسال بنجاح!' : '✅ Sent successfully!';
+            status.style.color = '#16a34a';
+            btn.textContent = currentLang === 'ar' ? '✓ تم' : '✓ Sent';
+            alert(currentLang === 'ar' ? 'تم إرسال النتيجة للمعلم بنجاح!' : 'Result sent to teacher successfully!');
+        })
+        .catch((error) => {
+            status.textContent = currentLang === 'ar' ? '❌ فشل الإرسال' : '❌ Failed to send';
+            status.style.color = '#dc2626';
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ar' ? '📧 حاول مرة أخرى' : '📧 Try Again';
+            alert(currentLang === 'ar' ? 'فشل الإرسال: ' + error.text : 'Failed: ' + error.text);
+        });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = loadState();
+    if (saved) {
+        currentLang = saved.lang || 'ar';
+        timeRemaining = saved.timeRemaining !== undefined ? saved.timeRemaining : TOTAL_TIME;
+        document.getElementById('btn-ar').classList.toggle('active', currentLang === 'ar');
+        document.getElementById('btn-en').classList.toggle('active', currentLang === 'en');
+        document.body.classList.toggle('en-mode', currentLang === 'en');
+    }
+    renderExam();
+    if (saved) {
+        if (saved.studentName) document.getElementById('studentName').value = saved.studentName;
+        if (saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+        if (saved.examDate) document.getElementById('examDate').value = saved.examDate;
+        if (saved.answers || saved.writtenAnswers) restoreAnswers(saved.answers, saved.writtenAnswers);
+    }
+    startTimer();
+    window.addEventListener('beforeunload', () => saveState());
+});
+</script>
+</body>
+</html>
